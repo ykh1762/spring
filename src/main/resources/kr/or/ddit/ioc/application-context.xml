@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 
+		* 스프링 빈 설정 -> 객체 생성을 위한 설명서.
+		스프링 빈?? : 스프링 컨테이너(spring ioc 컨테이너)에서 관리되는 객체.
+		
+		선언 방법 : <bean id/name="" class=""/>
+	-->
+	
+	<!-- RangerService (rangerDao가 필요) -->
+	
+	<!-- rangerDao spring bean 선언. -->
+	<!-- class 자동완성 사용. -->
+	<!-- * scope의 기본 값은 singleton -->
+	<bean name="rangerDaoSpringBean" class="kr.or.ddit.ranger.dao.RangerDaoImpl"/>
+	
+	<!-- 두 빈을 주입받은 객체가 서로 같은지 테스트 코드 작성해보기. -->
+	<bean name="rangerDao" class="kr.or.ddit.ranger.dao.RangerDaoImpl" scope="singleton"></bean>
+	
+	<!-- rangerDao prototype spring bean -->
+	<bean name="rangerDaoPrototype" class="kr.or.ddit.ranger.dao.RangerDaoImpl" scope="prototype"/>
+	
+	
+	
+
+	<!-- rangerService spring bean 선언. -->
+	<bean name="rangerService" class="kr.or.ddit.ranger.service.RangerServiceImpl">
+		<!-- property 주입. setter 주입. setter injection. -->
+		<property name="rangerD" ref="rangerDaoSpringBean"></property>
+	</bean>
+	
+	<!-- 동일한 클래스의 다른 이름을 갖는 스프링 빈. -->
+	<!-- 생성자 주입. -->
+	<bean name="rangerServiceConstructor" class="kr.or.ddit.ranger.service.RangerServiceImpl">
+		<constructor-arg ref="rangerDaoSpringBean"></constructor-arg>
+	</bean>
+	
+	
+	
+
+
+
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
