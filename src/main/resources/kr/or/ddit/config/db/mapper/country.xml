@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="country">
+	<!-- 전체 lprod 조회 -->
+  	<select id="getAllCountry" resultType="countryVo">
+    	select * from countries
+  	</select>
+  	
+	<select id="selectCountry" resultType="countryVo" parameterType="String">
+  		select * from countries 
+  		where country_iso_code = #{country_iso_code}
+  	</select>
+  	
+  	<select id="selectCountryPagingList" resultType="countryVo" parameterType="pageVo">
+		select *
+		  from
+			(select countries.*, rownum rn
+			   from countries			  )
+		where rn between (#{page}-1)*#{pageSize}+1 and #{page}*#{pageSize}
+  	</select>
+  	
+  	<select id="getCountryCnt" resultType="Integer">
+		select count (*)
+		  from countries
+  	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

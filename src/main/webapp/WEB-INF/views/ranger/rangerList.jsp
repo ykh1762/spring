@@ -25,5 +25,23 @@
 			</c:forEach>
 		</tbody>
 	</table> 
+	
+	게시판 구분 : ${boardGb }	
+	
+	
+	
+	
+	
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+

@@ -20,10 +20,11 @@ public class RangerVo {
 	public RangerVo() {
 		
 	}
-	
+
 	@Override
 	public String toString() {
-		return "RangerVo [userId=" + userId + ", userNm=" + userNm + ", birth=" + birth + ", regDt=" + regDt + "]";
+		return "RangerVo [userId=" + userId + ", userNm=" + userNm + ", listIndex=" + listIndex + ", birth=" + birth
+				+ ", regDt=" + regDt + "]";
 	}
 
 	public String getUserId() {
