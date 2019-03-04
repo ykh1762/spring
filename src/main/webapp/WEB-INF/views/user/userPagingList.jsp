@@ -147,7 +147,7 @@
 		});
 	</script>
 	
-<form action="${cp }/user" id="frm">
+<form action="${cp }/user/user" id="frm">
 	<input type="hidden" name="userId" id="userId"/>
 </form>
 	

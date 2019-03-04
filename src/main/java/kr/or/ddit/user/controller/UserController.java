@@ -1,13 +1,21 @@
 package kr.or.ddit.user.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.ddit.user.model.UserVo;
@@ -48,6 +56,16 @@ public class UserController {
 		return "user/userAllList";
 	}
 
+	/**
+	 * 
+	 * Method : userPagingList
+	 * 작성자 : PC19
+	 * 변경이력 :
+	 * @param pageVo
+	 * @param model
+	 * @return
+	 * Method 설명 : 사용자 페이징 리스트 조회.
+	 */
 	@RequestMapping("/userPagingList")
 	public String userPagingList(PageVo pageVo, Model model){
 		
@@ -86,6 +104,62 @@ public class UserController {
 		
 		return "user/userPagingList";
 	}
+	
+	@RequestMapping(path="/user", method=RequestMethod.GET)
+	public String user(@RequestParam("userId") String userId, Model model){
+/*		// userId parameter 확인.
+		String userId = request.getParameter("userId");
+		
+		// 해당 파라미터로 userService.selectUser(userId);
+		UserVo userVo = userService.selectUser(userId);
+		
+		// 조회된 user객체를 request객체에 속성으로 저장.
+		request.setAttribute("userVo", userVo);
+		
+		// 사용자 상세 화면을 담당하는 view인 user.jsp로 위임.
+		request.getRequestDispatcher("/user/user.jsp").forward(request, response);		
+*/
+		UserVo userVo = userService.selectUser(userId);
+		
+		model.addAttribute(userVo);
+		
+		return "user/user";
+	}
+	
+	@RequestMapping("/profileImg")
+	public void profileImg(HttpServletRequest req, HttpServletResponse resp, 
+			@RequestParam("userId") String userId) throws IOException{
+		resp.setHeader("Content-Disposition", "attachment; filename=profile.png");
+		resp.setContentType("image"); 
+
+		UserVo userVo = userService.selectUser(userId);		
+		
+		FileInputStream fis;
+		
+		if(userVo != null && userVo.getRealFileName() != null)
+			fis = new FileInputStream(new File(userVo.getRealFileName()));
+			
+		else{
+			ServletContext application = req.getServletContext();
+			String noimgPath = application.getRealPath("upload/noimg.png");
+			fis = new FileInputStream(new File(noimgPath));
+		}
+		
+		ServletOutputStream sos = resp.getOutputStream();
+		
+		byte[] buff = new byte[512];
+		int len = 0;
+		while((len = fis.read(buff)) > -1){
+			sos.write(buff);
+		}
+		
+		sos.close();
+		fis.close();		
+		
+	}
+	
+	
+	
 	
 	
 }
