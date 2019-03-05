@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 
 <ul class="nav nav-sidebar">
-  <li><a href="${cp }/module/main.jsp">메인 페이지</a></li>
+	<!-- 메인 왜 안가지지? -->
+  <li><a href="/WEB-INF/views/main.jsp">메인 페이지</a></li>
 </ul>
 
 <ul class="nav nav-sidebar">
@@ -11,8 +12,8 @@
 </ul>
 
 <ul class="nav nav-sidebar">
-  <li><a href="${cp }/lprodList">제품 그룹리스트 조회</a></li>
-  <li><a href="${cp }/lprodPagingList">제품 그룹리스트 페이징</a></li>
+  <li><a href="${cp }/lprod/lprodList">제품 그룹리스트 조회</a></li>
+  <li><a href="${cp }/lprod/lprodPagingList">제품 그룹리스트 페이징</a></li>
 </ul>
 
 <ul class="nav nav-sidebar">
