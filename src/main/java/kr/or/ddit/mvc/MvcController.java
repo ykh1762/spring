@@ -26,7 +26,7 @@ public class MvcController {
 	 */
 	@RequestMapping("/mvc/view")
 	public String view(){
-		return "/mvc/view";
+		return "mvc/view";
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class MvcController {
 			e.printStackTrace();
 		}
 		
-		return "/mvc/view";
+		return "mvc/view";
 	}
 	
 	

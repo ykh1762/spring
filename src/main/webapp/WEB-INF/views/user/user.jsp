@@ -93,12 +93,7 @@
 						<label class="control-label">${userVo.addr2}</label>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="pass" class="col-sm-2 control-label">Password</label>
-					<div class="col-sm-10">
-						<label class="control-label">********</label>
-					</div>
-				</div>
+
 				
 				<div class="form-group">
 					<label for="pass" class="col-sm-2 control-label">등록일자</label>
@@ -144,7 +139,7 @@
     </script>
     
     <!-- UserModifyFormController로 요청을 보냄. -->
-    <form action="${cp }/userModifyForm" id="frm">
+    <form action="${cp }/user/userModifyForm" id="frm">
     	<input type="hidden" id="userId" name="userId">
     </form>
 

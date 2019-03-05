@@ -3,21 +3,28 @@ package kr.or.ddit.user.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.or.ddit.encrypt.kisa.sha256.KISA_SHA256;
 import kr.or.ddit.user.model.UserVo;
 import kr.or.ddit.user.service.IUserService;
 import kr.or.ddit.util.model.PageVo;
@@ -157,6 +164,207 @@ public class UserController {
 		fis.close();		
 		
 	}
+	
+	/**
+	 * 
+	 * Method : userForm
+	 * 작성자 : PC19
+	 * 변경이력 :
+	 * @return
+	 * Method 설명 : 사용자 등록폼 요청.
+	 */
+//	@RequestMapping("/userForm") get방식으로만 처리하도록 변경.
+	@RequestMapping(path="/userForm", method=RequestMethod.GET)
+	public String userForm(){
+		return "user/userForm";
+	}
+	
+	/**
+	 * 
+	 * Method : userForm
+	 * 작성자 : PC19
+	 * 변경이력 :
+	 * @param userVo
+	 * @param profile
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 * Method 설명 : 사용자 등록 요청.
+	 */
+	@RequestMapping(path="/userForm", method=RequestMethod.POST)
+	public String userForm(UserVo userVo, @RequestPart("profile") MultipartFile profile,
+			HttpSession session, Model model) throws IllegalStateException, IOException{
+		
+		UserVo duplicateUserVo = userService.selectUser(userVo.getUserId());
+		
+		String filename = "";
+		String realFilename = "";
+		
+		// 중복체크 통과(신규등록)
+		if(duplicateUserVo == null){
+			// 사용자 프로파일을 업로드 한 경우.
+			if(profile.getSize() > 0){
+				filename = profile.getOriginalFilename();
+				realFilename = "d:\\picture" + UUID.randomUUID().toString();
+				
+				profile.transferTo(new File(realFilename));
+			}
+			
+			userVo.setFileName(filename);
+			userVo.setRealFileName(realFilename);
+			
+			// 사용자 비밀번호 암호화 로직 추가.
+			userVo.setPass(KISA_SHA256.encrypt(userVo.getPass()));
+			
+
+			
+			
+			int insertCnt = 0;
+			
+			try{
+				insertCnt = userService.insertUser(userVo);				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			if(insertCnt == 1){
+				// 입력 성공.
+				session.setAttribute("msg", "정상 등록 되었습니다.");
+				
+				// * spring redirect 방법
+				return "redirect:/user/userPagingList"; // contextPath 작업 필요.
+			}else{
+				// 입력 실패.
+				// doGet() 호출 -> userForm() 호출.
+				return "user/userForm"; // 검증 필요.
+			}	
+		}else{
+			// 중복체크 실패.
+			model.addAttribute("msg", "중복체크에 실패 했습니다.");
+			return "user/userForm"; // 검증 필요.
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * Method : userModifyForm
+	 * 작성자 : PC19
+	 * 변경이력 :
+	 * @param userId
+	 * @param model
+	 * @return
+	 * Method 설명 : 정보 수정 폼 요청.
+	 */
+	@RequestMapping(path="/userModifyForm", method=RequestMethod.GET)
+	public String userModifyForm(@RequestParam("userId") String userId, Model model){
+		UserVo userVo = userService.selectUser(userId);
+		
+		model.addAttribute("user", userVo);
+		
+		return "user/userModify";
+	}
+	
+	/**
+	 * 
+	 * Method : userModifyForm
+	 * 작성자 : PC19
+	 * 변경이력 :
+	 * @param userVo
+	 * @param profilePart
+	 * @param session
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 * Method 설명 : 사용자 정보 수정.
+	 */
+	@RequestMapping(path="/userModifyForm", method=RequestMethod.POST)
+	public String userModifyForm(UserVo userVo, @RequestPart("profile") MultipartFile profilePart,
+			HttpSession session, Model model, RedirectAttributes ra,
+			HttpServletRequest req) throws IllegalStateException, IOException{
+	// UserVo를 인자로 하면 알아서 mapping이 되네.
+//	public String userModifyForm(@RequestParam("userId") String userId, @RequestParam("userNm") String userNm, 
+//			@RequestParam("alias") String alias, @RequestParam("addr1") String addr1, 
+//			@RequestParam("addr2") String addr2, @RequestParam("zipcode") String zipcode, 
+//			@RequestParam("pass") String pass, @RequestPart("profile") MultipartFile profilePart,
+//			HttpSession session) throws IllegalStateException, IOException{
+		
+		userVo = new UserVo(userVo.getUserId(), userVo.getUserNm(), userVo.getAlias(), userVo.getAddr1(), 
+				userVo.getAddr2(), userVo.getZipcode(), userVo.getPass());
+//		UserVo userVo = new UserVo(userId, userNm, alias, addr1, addr2, zipcode, pass);
+		
+		String fileName = "";
+		String realFileName = "";
+		
+		if(profilePart.getSize() > 0){
+			fileName = profilePart.getOriginalFilename();
+			realFileName = "d:\\picture" + UUID.randomUUID().toString();
+			
+			profilePart.transferTo(new File(realFileName));
+			
+		}
+		
+		userVo.setFileName(fileName);
+		userVo.setRealFileName(realFileName);
+		
+		// 비밀번호 수정 요청여부
+		// 사용자가 값을 입력하지 않은 경우 -> 기존 비밀번호 유지.
+		if(userVo.getPass().equals("")){
+			UserVo userVoForPass = userService.selectUser(userVo.getUserId());
+			userVo.setPass(userVoForPass.getPass());
+		}else{
+			// 사용자가 비밀번호를 신규 등록한 경우.
+			userVo.setPass(KISA_SHA256.encrypt(userVo.getPass()));
+		}
+		
+		
+		int updateCnt = userService.updateUser(userVo);
+		
+		if(updateCnt == 1){
+			session.setAttribute("updateMsg", "정보 수정 완료.");
+
+			
+			// * redirect 파라미터 보내는 방법.
+			// 1. url로 작성.
+			// "redirect:/user/user?userId=" + userVo.getUserId();
+			//
+			// 2. model객체의 속성 이용. (저장된 속성을 자동으로 파라미터 변환)
+			// model.addAttribute("userId", userVo.getUserId());
+			// return "redirect:/user/user";
+			//
+			// 3. RedirectAttributes(ra) 객체를 이용.
+			// ra.addAttribute("userId", userVo.getUserId());
+			// return "redirect:/user/user";
+			
+			// 1.
+//			return "redirect:/user/user?userId=" + userVo.getUserId();
+			
+			// 2.
+//			model.addAttribute("userId", userVo.getUserId());
+//			return "redirect:/user/user";
+			
+			// 3. RedirectAttributes(ra) 객체 - FlashAttribute. 잠시동안 존재.
+			ra.addAttribute("userId", userVo.getUserId());
+			ra.addFlashAttribute("msg", "정상 등록 되었습니다.");
+			
+			// 이 경우는 redirect를 하면 값이 사라져서 msg가 전달되지 않는다.
+			//model.addAttribute("msg", "정상 등록 되었습니다.")
+			
+			// contextPath가 있는 경우 추가.
+			return "redirect:"+ req.getContextPath() +"/user/user";
+			
+		}else{
+			return "user/userModify";
+		}
+
+		
+	}
+	
+	
+	
+	
 	
 	
 	
