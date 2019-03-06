@@ -117,14 +117,16 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
+    	// ${msg} != null 이렇게 써서 alert가 안떴었네.
+		<c:if test="${msg != null}">
+			alert("${msg}");
+		<%	session.removeAttribute("updateMsg"); %>
+		</c:if>
+		
     	$(document).ready(function(){
     		console.log("document ready");
-   			console.log("${userVo.userId}");
+   			console.log("${userVo.userId}"+11);
    			
-   			<c:if test="${updateMsg} != null">
-   				alert("${updateMsg}");
- 			<%	session.removeAttribute("updateMsg"); %>
-   			</c:if>
    			
     		
     		$("#btn_edit").on("click", function(){

@@ -179,20 +179,6 @@ public class UserController {
 		return "user/userForm";
 	}
 	
-	/**
-	 * 
-	 * Method : userForm
-	 * 작성자 : PC19
-	 * 변경이력 :
-	 * @param userVo
-	 * @param profile
-	 * @param session
-	 * @param model
-	 * @return
-	 * @throws IllegalStateException
-	 * @throws IOException
-	 * Method 설명 : 사용자 등록 요청.
-	 */
 	@RequestMapping(path="/userForm", method=RequestMethod.POST)
 	public String userForm(UserVo userVo, @RequestPart("profile") MultipartFile profile,
 			HttpSession session, Model model) throws IllegalStateException, IOException{
@@ -267,19 +253,6 @@ public class UserController {
 		return "user/userModify";
 	}
 	
-	/**
-	 * 
-	 * Method : userModifyForm
-	 * 작성자 : PC19
-	 * 변경이력 :
-	 * @param userVo
-	 * @param profilePart
-	 * @param session
-	 * @return
-	 * @throws IllegalStateException
-	 * @throws IOException
-	 * Method 설명 : 사용자 정보 수정.
-	 */
 	@RequestMapping(path="/userModifyForm", method=RequestMethod.POST)
 	public String userModifyForm(UserVo userVo, @RequestPart("profile") MultipartFile profilePart,
 			HttpSession session, Model model, RedirectAttributes ra,
@@ -323,7 +296,7 @@ public class UserController {
 		int updateCnt = userService.updateUser(userVo);
 		
 		if(updateCnt == 1){
-			session.setAttribute("updateMsg", "정보 수정 완료.");
+//			session.setAttribute("updateMsg", "정보 수정 완료.");
 
 			
 			// * redirect 파라미터 보내는 방법.

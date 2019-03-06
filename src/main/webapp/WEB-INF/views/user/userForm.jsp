@@ -102,7 +102,8 @@
 	  	<div class="form-group">
 	  		<label for="pass" class="col-sm-2 control-label">Password</label>
 	  		<div class="col-sm-7">
-	  			<input type="password" class="form-control" id="pass" name="pass">
+	  			<input type="password" class="form-control" id="pass" name="pass"
+	  					placeholder="*********">
 	  		</div>
 	  	</div>
 	  
@@ -129,6 +130,7 @@
 		$("#addr1").val("${param.addr1}");
 		$("#addr2").val("${param.addr2}");
 		$("#zipcode").val("${param.zipcode}");
+		$("#pass").val("${param.pass}");
 	}
 
 

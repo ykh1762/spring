@@ -104,8 +104,7 @@
 	  	<div class="form-group">
 	  		<label for="pass" class="col-sm-2 control-label">Password</label>
 	  		<div class="col-sm-7">
-	  			<input type="password" class="form-control" id="pass" name="pass"
-	  				placeholder="*******">
+	  			<input type="password" class="form-control" id="pass" name="pass">
 	  		</div>
 	  	</div>
 	  
@@ -134,7 +133,7 @@
 		$("#addr1").val("${user.addr1}");
 		$("#addr2").val("${user.addr2}");
 		$("#zipcode").val("${user.zipcode}");
-		$("#pass").val("${user.pass}");
+		//$("#pass").val("${user.pass}");
 		$("img").attr("src", "${cp}/user/profileImg?userId=${user.userId}");
 		// 다시 입력해야할 때 입력한 값이 남아있게 해줌.
 	}
@@ -197,11 +196,11 @@
 			
 			
 			// 비밀번호
-			if($("#pass").val().trim() == ""){
-				alert("비밀번호를 입력해주세요.");
-				$("#pass").focus();
-				return false;
-			}
+// 			if($("#pass").val().trim() == ""){
+// 				alert("비밀번호를 입력해주세요.");
+// 				$("#pass").focus();
+// 				return false;
+// 			}
 			
 			$("#frm").submit();
 			// 정보 수정 요청은 post로 보냄.
