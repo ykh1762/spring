@@ -60,7 +60,10 @@ public class UserController {
 		model.addAttribute("userList", userList);
 		
 		// controller만 다시 만들고 나머지는 재사용(userAllList.jsp)
-		return "user/userAllList";
+		//return "user/userAllList";
+		
+		// tiles
+		return "userAllListTiles";
 	}
 
 	/**
@@ -109,7 +112,10 @@ public class UserController {
 		model.addAttribute("pageSize", pageVo.getPageSize());
 		model.addAttribute("page", pageVo.getPage());
 		
-		return "user/userPagingList";
+		//return "user/userPagingList";
+		
+		// tiles
+		return "userPagingListTiles";
 	}
 	
 	@RequestMapping(path="/user", method=RequestMethod.GET)
@@ -130,7 +136,10 @@ public class UserController {
 		
 		model.addAttribute(userVo);
 		
-		return "user/user";
+		//return "user/user";
+		
+		// tiles
+		return "userTiles";
 	}
 	
 	@RequestMapping("/profileImg")
