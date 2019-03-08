@@ -127,7 +127,7 @@ public class UserServiceImplTest extends LogicTestConfig{
 
 	}
 	
-	@Test
+//	@Test
 	public void testUpdateUserPass(){
 		/***Given***/
 		

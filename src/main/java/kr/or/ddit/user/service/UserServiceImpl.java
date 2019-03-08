@@ -37,11 +37,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public List<UserVo> getAllUser() {
-		SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-		
-		List<UserVo> userList = userDao.getAllUser(sqlSession);
-		sqlSession.close();
+		List<UserVo> userList = userDao.getAllUser();
 		
 		return userList;
 	}
@@ -56,11 +52,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public UserVo selectUser(String userId) {
-		SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-		
-		UserVo userVo = userDao.selectUser(sqlSession, userId);
-		sqlSession.close();
+		UserVo userVo = userDao.selectUser(userId);
 		
 		return userVo;
 	}
@@ -76,16 +68,11 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public Map<String, Object> selectUserPagingList(PageVo pageVo) {
-		SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		resultMap.put("userList", userDao.selectUserPagingList(sqlSession, pageVo));
-		resultMap.put("userCnt", userDao.getUserCnt(sqlSession));
+		resultMap.put("userList", userDao.selectUserPagingList(pageVo));
+		resultMap.put("userCnt", userDao.getUserCnt());
 		// lastPage를 알기위해 userCnt를 구함.
-		
-		sqlSession.close();
 		
 		return resultMap;
 	}
@@ -100,13 +87,11 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public int insertUser(UserVo userVo) {
-		SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession();
+		// commit을 명시하지 않았지만 insert 후에 자동으로 commit이 됨.
+		// insert시 error가 나는 경우에도 자동으로 rollback이 됨.
+		// * 선언적 트랜잭션.
 		
-		int insertCnt = userDao.insertUser(sqlSession, userVo);
-		
-		sqlSession.commit();
-		sqlSession.close();
+		int insertCnt = userDao.insertUser(userVo);
 		
 		return insertCnt;
 	}
@@ -122,13 +107,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public int deleteUser(String userId) {
-		SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession();
-		
-		int deleteCnt = userDao.deleteUser(sqlSession, userId);
-		
-		sqlSession.commit();
-		sqlSession.close();
+		int deleteCnt = userDao.deleteUser(userId);
 		
 		return deleteCnt;
 	}
@@ -145,13 +124,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public int updateUser(UserVo userVo) {
-		SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession();	
-		
-		int updateCnt = userDao.updateUser(sqlSession, userVo);
-		
-		sqlSession.commit();
-		sqlSession.close();
+		int updateCnt = userDao.updateUser(userVo);
 		
 		return updateCnt;
 	}
@@ -166,10 +139,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public int encryptPass() { // 수정하기
-		SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession();	
-		
-		List<UserVo> userList = userDao.getAllUser(sqlSession);
+		List<UserVo> userList = userDao.getAllUser();
 		
 		int updateCnt = 0; 
 		
@@ -177,11 +147,8 @@ public class UserServiceImpl implements IUserService {
 			String encryptText = KISA_SHA256.encrypt(userVo.getPass());
 			userVo.setPass(encryptText);
 			
-			updateCnt += userDao.updateUserPass(sqlSession, userVo);		
+			updateCnt += userDao.updateUserPass(userVo);		
 		}
-		
-		sqlSession.commit();
-		sqlSession.close();
 		
 		return updateCnt;
 	}
@@ -189,8 +156,6 @@ public class UserServiceImpl implements IUserService {
 	
 
 }
-
-
 
 
 

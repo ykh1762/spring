@@ -10,6 +10,9 @@
 
 	<logger name="kr.or.ddit" level="debug"/>
 	
+	<!-- 로그 안뜨게 설정. -->
+	<logger name="org.apache.commons.digester.Digester" level="error"></logger>
+	
     
 	<root level="DEBUG">
    		<appender-ref ref="console" />
