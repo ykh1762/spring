@@ -216,6 +216,10 @@ public class MvcController {
 		return "helloTiles";
 	}
 	
+	@RequestMapping("/msgView")
+	public String msgView(){
+		return "mvc/msgView";
+	}
 	
 	
 	

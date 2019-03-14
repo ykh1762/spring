@@ -170,12 +170,12 @@
 			// 2. 이벤트 핸들러 대상을 변경.(.userTr -> #userListTbody) 동적으로 생성되는
 			// html을 감싸는 영역에 이벤트를 등록. 단, on 옵션에서 감싸는 영역 안에 처리되어야
 			// 할 selector를 명시. (기존 : $(".userTr").on("click", function(){))
-			$("#userListTbody").on("click", ".userTr", function(){
-				var userId = $(this).data("userid");
+// 			$("#userListTbody").on("click", ".userTr", function(){
+// 				var userId = $(this).data("userid");
 				
-				$("#userId").val(userId);
-				$("#frm").submit();
-			});
+// 				$("#userId").val(userId);
+// 				$("#frm").submit();
+// 			});
 
 		});
 	</script>

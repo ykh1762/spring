@@ -1,5 +1,7 @@
 
 
+-- RANGER 테이블을 지우려면 먼저 RANGERDEPT를 지워야 함.
+
 DELETE RANGERDEPT;
 
 DELETE RANGER;
